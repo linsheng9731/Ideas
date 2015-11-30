@@ -1,0 +1,59 @@
+scala并发编程
+---------
+
+Future
+------
+Future提供了一套高效便捷的非阻塞并行操作管理方案。其基本思想很简单，所谓Future，指的是一类占位符对象，用于指代某些尚未完成的计算的结果。一般来说，由Future指代的计算都是并行执行的，计算完毕后可另行获取相关计算结果。以这种方式组织并行任务，便可以写出高效、异步、非阻塞的并行代码。
+
+默认情况下，future和promise并不采用一般的阻塞操作，而是依赖回调进行非阻塞操作。为了在语法和概念层面更加简明扼要地使用这些回调，Scala还提供了flatMap、foreach和filter等算子，使得我们能够以非阻塞的方式对future进行组合。当然，future仍然支持阻塞操作——必要时，可以阻塞等待future（不过并不鼓励这样做）。
+所谓Future，是一种用于指代某个尚未就绪的值的对象。而这个值，往往是某个计算过程的结果：
+
+若该计算过程尚未完成，我们就说该Future未就位；
+若该计算过程正常结束，或中途抛出异常，我们就说该Future已就位。
+Future的就位分为两种情况：
+
+当Future带着某个值就位时，我们就说该Future携带计算结果成功就位。
+当Future因对应计算过程抛出异常而就绪，我们就说这个Future因该异常而失败。
+Future的一个重要属性在于它只能被赋值一次。一旦给定了某个值或某个异常，future对象就变成了不可变对象——无法再被改写。
+
+创建future对象最简单的方法是调用future方法，该future方法启用异步(asynchronous)计算并返回保存有计算结果的futrue，一旦该future对象计算完成，其结果就变的可用。
+
+注意_Future[T]_ 是表示future对象的类型，而future是方法，该方法创建和调度一个异步计算，并返回随着计算结果而完成的future对象。
+
+这最好通过一个例子予以说明。
+
+假设我们使用某些流行的社交网络的假定API获取某个用户的朋友列表，我们将打开一个新对话(session)，然后发送一个请求来获取某个特定用户的好友列表。
+
+    import scala.concurrent._
+    import ExecutionContext.Implicits.global
+    val session = socialNetwork.createSessionFor("user", credentials)
+    val session = socialNetwork.createSessionFor("user", credentials)
+      session.getFriends()
+    }
+
+Promise
+-------
+到目前为止，我们仅考虑了通过异步计算的方式创建future对象来使用future的方法。尽管如此，futures也可以使用promises来创建。
+
+如果说futures是为了一个还没有存在的结果，而当成一种只读占位符的对象类型去创建，那么promise就被认为是一个可写的，可以实现一个future的单一赋值容器。这就是说，promise通过这种success方法可以成功去实现一个带有值的future。相反的，因为一个失败的promise通过failure方法就会实现一个带有异常的future。
+
+一个promise p通过p.future方式返回future。 这个futrue对象被指定到promise p。根据这种实现方式，可能就会出现p.future与p相同的情况。
+
+考虑下面的生产者 - 消费者的例子，其中一个计算产生一个值，并把它转移到另一个使用该值的计算。这个传递中的值通过一个promise来完成。
+
+STM(软件事务内存)
+-------------------
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
